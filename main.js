@@ -1,7 +1,6 @@
 // setup the control gui
 const controls = new function () {
     this.amount = 2;
-    this.curveSegments = 12;
 
     this.asGeom = function () {
         // remove the old plane
@@ -10,7 +9,7 @@ const controls = new function () {
 
         const options = {
             amount: controls.amount,
-            curveSegments: controls.curveSegments,
+            bevelEnabled: false,
         };
 
         shape = createMesh(new THREE.ExtrudeGeometry(drawShape(), options));
@@ -23,14 +22,14 @@ const controls = new function () {
 function createLine(shape, spaced) {
     if (!spaced) {
         const mesh = new THREE.Line(shape.createPointsGeometry(), new THREE.LineBasicMaterial({
-            color: 0xff3333,
-            linewidth: 2
+            color: 0xff0000,
+            linewidth: 5
         }));
         return mesh;
     } else {
         const mesh = new THREE.Line(shape.createSpacedPointsGeometry(20), new THREE.LineBasicMaterial({
-            color: 0xff3333,
-            linewidth: 2
+            color: 0xff0000,
+            linewidth: 1
         }));
         return mesh;
     }
@@ -44,23 +43,27 @@ function drawShape() {
     const shape = new THREE.Shape();
 
     // startpoint
-    shape.moveTo(10, 10);
+    shape.moveTo(-10, 0);
 
     // straight line upwards
-    shape.lineTo(10, 40);
+//    shape.lineTo(10, 40);
+    shape.lineTo(-10, 30);
+    shape.lineTo( 0, 30);
 
     // the top of the figure, curve to the right
-    shape.bezierCurveTo(15, 25, 25, 25, 30, 40);
+//    shape.bezierCurveTo(15, 25, 25, 25, 30, 40);
 
     // spline back down
     shape.splineThru(
-            [new THREE.Vector2(32, 30),
-                new THREE.Vector2(28, 20),
-                new THREE.Vector2(30, 10),
+//        [new THREE.Vector2(32, 30),
+            [new THREE.Vector2(13, 20),
+                new THREE.Vector2(10, 10),
+                new THREE.Vector2(13, 0),
             ]);
 
-    // curve at the bottom
-    shape.quadraticCurveTo(20, 15, 10, 10);
+    // // curve at the bottom
+    // shape.quadraticCurveTo(20, 15, 10, 10);
+    shape.lineTo(-10, 0);
 
     // // add 'eye' hole one
     // const hole1 = new THREE.Path();
@@ -84,12 +87,12 @@ function drawShape() {
 // create a mesh of geometry and materials
 function createMesh(geom) {
 
-    geom.applyMatrix(new THREE.Matrix4().makeTranslation(-20, 0, 0));
+    geom.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, 0));
 
     // assign two materials
     const meshMaterial = new THREE.MeshNormalMaterial({
         transparent: true,
-        opacity: 0.7
+        opacity: 0.8
     });
 
     //  meshMaterial.side = THREE.DoubleSide;
@@ -104,7 +107,8 @@ function createMesh(geom) {
 
 function rendering() {
 
-    shape.rotation.y = step += 0.01;
+//    shape.rotation.y = step += 0.01;
+    shape.rotation.y = step += 0.04;
 
     // render using requestAnimationFrame
     requestAnimationFrame(rendering);
@@ -126,10 +130,11 @@ let shape = createMesh(new THREE.ShapeGeometry(drawShape()));
 scene.add(shape);
 
 // position and point the camera to the center of the scene
-camera.position.x = -20;
-camera.position.y = 60;
-camera.position.z = 60;
-camera.lookAt(new THREE.Vector3(20, 20, 0));
+camera.position.x = 0;
+camera.position.y = 50;
+camera.position.z = 100;
+//camera.lookAt(new THREE.Vector3(20, 20, 0));
+camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 // add the output destination of the renderer as an HTML element
 document.getElementById("WebGL-div").appendChild(webGLRenderer.domElement);
@@ -138,8 +143,8 @@ document.getElementById("WebGL-div").appendChild(webGLRenderer.domElement);
 let step = 0;
 
 const gui = new dat.GUI();
-gui.add(controls, 'amount', 0, 20).onChange(controls.asGeom);
-gui.add(controls, 'curveSegments', 1, 30).step(1).onChange(controls.asGeom);
+gui.add(controls, 'amount', 0, 40).onChange(controls.asGeom);
+//gui.add(controls, 'curveSegments', 1, 30).step(1).onChange(controls.asGeom);
 
 controls.asGeom();
 
