@@ -1,6 +1,8 @@
 // setup the control gui
 const controls = new function () {
     this.amount = 2;
+    this.upperPull = 13;
+    this.lowerPull = 5;
 
     this.asGeom = function () {
         // remove the old plane
@@ -56,8 +58,8 @@ function drawShape() {
     // spline back down
     shape.splineThru(
 //        [new THREE.Vector2(32, 30),
-            [new THREE.Vector2(13, 20),
-                new THREE.Vector2(10, 10),
+            [new THREE.Vector2(controls.upperPull, 20),
+                new THREE.Vector2(controls.lowerPull, 10),
                 new THREE.Vector2(13, 0),
             ]);
 
@@ -108,7 +110,7 @@ function createMesh(geom) {
 function rendering() {
 
 //    shape.rotation.y = step += 0.01;
-    shape.rotation.y = step += 0.04;
+    shape.rotation.y = step += 0.02;
 
     // render using requestAnimationFrame
     requestAnimationFrame(rendering);
@@ -144,6 +146,8 @@ let step = 0;
 
 const gui = new dat.GUI();
 gui.add(controls, 'amount', 0, 40).onChange(controls.asGeom);
+gui.add(controls, 'upperPull', -5, 20).onChange(controls.asGeom);
+gui.add(controls, 'lowerPull', -5, 20).onChange(controls.asGeom);
 //gui.add(controls, 'curveSegments', 1, 30).step(1).onChange(controls.asGeom);
 
 controls.asGeom();
