@@ -1,4 +1,4 @@
-// setup the control panel
+// setup the control panel.
 const controls = new function () {
     // default value for slider
     this.thickness = 8;
